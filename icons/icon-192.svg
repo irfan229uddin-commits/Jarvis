@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="28" fill="#001428"/>
+  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" font-family="Orbitron, sans-serif" font-size="48" fill="url(#g)">J</text>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#00e5ff"/><stop offset="1" stop-color="#0050ff"/></linearGradient>
+  </defs>
+</svg>

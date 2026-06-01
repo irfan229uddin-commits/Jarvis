@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#000d1a"/>
+<title>J.A.R.V.I.S. — PWA</title>
+<link rel="manifest" href="/manifest.json" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+  html,body{height:100%;margin:0;background:#000d1a;color:#b0d8e8;font-family: 'Exo 2',sans-serif}
+  #app{max-width:900px;margin:0 auto;padding:12px}
+  .header{display:flex;align-items:center;justify-content:space-between}
+  .logo{font-family:'Orbitron',sans-serif;color:#00e5ff}
+  #messages{height:60vh;overflow:auto;background:linear-gradient(180deg,#001428,#000d1a);border:1px solid rgba(0,229,255,0.06);padding:12px;border-radius:8px}
+  .msg{margin-bottom:10px}
+  .user{color:#a0c8e8;text-align:right}
+  .ai{color:#cce8f4;text-align:left}
+  #input{display:flex;gap:8px;margin-top:12px}
+  textarea{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(0,229,255,0.08);background:transparent;color:#cce8f4}
+  button{background:#0050ff;color:white;border:none;padding:10px 12px;border-radius:8px}
+  #installBtn{background:transparent;border:1px solid rgba(0,229,255,0.2);color:var(--cyan,#00e5ff)}
+</style>
+</head>
+<body>
+  <div id="app">
+    <div class="header">
+      <div class="logo">J.A.R.V.I.S. PWA</div>
+      <div>
+        <button id="installBtn" style="display:none">Install</button>
+      </div>
+    </div>
+
+    <div id="messages"></div>
+
+    <div id="input">
+      <textarea id="textInput" rows="2" placeholder="Ask JARVIS anything..."></textarea>
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <audio id="ttsPlayer" hidden></audio>
+
+  <script src="/app.js"></script>
+  <script>
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('SW registered', reg.scope);
+      }).catch(err => console.warn('SW failed', err));
+    }
+
+    // Install prompt handling
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+    });
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
